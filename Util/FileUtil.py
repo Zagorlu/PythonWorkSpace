@@ -136,4 +136,63 @@ class FileUtil:
         except Exception as exception:
             raise exception
 
+    @staticmethod
+    def destroyer_Specific_File(param):
+        path = os.path.dirname(os.path.realpath(__file__))
+        dirs = os.listdir(path)
+        for file in dirs:
+            if param in file:
+                os.remove(file)
+
+
+    @staticmethod
+    def dataFileSplit(fileName, maximumChaperSize = 500 * 1024 * 1024, memoryBufferSize = 50 * 1024 * 1024 * 1024):
+        """
+        INFO:
+        :param fileName: fileName for which is the source file name
+        :param maximumChaperSize: Maximum chapter size default value 500MB
+        :param memoryBufferSize: Memory buffer size default vaule 50GB
+        :return: NONE
+        """
+
+        chapters = 0
+        bufferText = ''
+        with open(fileName, 'rb') as src:
+            while True:
+                tgt = open(fileName + '.%03d' % chapters, 'wb')
+                written = 0
+                while written < maximumChaperSize:
+                    if len(bufferText) > 0:
+                        tgt.write(bufferText)
+                    tgt.write(src.read(min(memoryBufferSize, maximumChaperSize - written)))
+                    written += min(memoryBufferSize, maximumChaperSize - written)
+                    bufferText = src.read(1)
+                    if len(bufferText) == 0:
+                        break
+                tgt.close()
+                if len(bufferText) == 0:
+                    break
+                chapters += 1
+
+    @staticmethod
+    def textFileSplit(fileName, lineCount = 20, outPutFileName = "output.txt"):
+        splitLen = 20  # 20 lines per file
+        outputBase = 'output'  # output.1.txt, output.2.txt, etc.
+
+        fOpen = open('input.txt', 'r')
+
+        count = 0
+        at = 0
+        dest = None
+        for line in fOpen:
+            if count % splitLen == 0:
+                if dest: dest.close()
+                dest = open(outputBase + str(at) + '.txt', 'w')
+                at += 1
+            dest.write(line)
+            count += 1
+        return
+
+
+
 
