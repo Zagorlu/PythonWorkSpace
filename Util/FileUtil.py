@@ -137,61 +137,81 @@ class FileUtil:
             raise exception
 
     @staticmethod
-    def destroyer_Specific_File(param):
+    def removeFileInCurrentPath(fileName):
+        """
+        INFO: This function will remove current path file
+        :param fileName: which will removes the file name
+        :return: NONE
+        """
         path = os.path.dirname(os.path.realpath(__file__))
         dirs = os.listdir(path)
         for file in dirs:
-            if param in file:
+            if fileName in file:
                 os.remove(file)
 
+    @staticmethod
+    def removeFileInExternalPath(fileName, pathName):
+        """
+        INFO: This function will remove specific path file
+        :param fileName: which will removes the file name
+        :param pathName: which will removes the files pathName
+        :return: NONE
+        """
+        path = os.path.dirname(pathName)
+        dirs = os.listdir(path)
+        for file in dirs:
+            if fileName in file:
+                os.remove(file)
 
     @staticmethod
     def dataFileSplit(fileName, maximumChaperSize = 500 * 1024 * 1024, memoryBufferSize = 50 * 1024 * 1024 * 1024):
         """
-        INFO:
+        INFO: This function will sperate files to datasize. This file applicable for data file
         :param fileName: fileName for which is the source file name
         :param maximumChaperSize: Maximum chapter size default value 500MB
         :param memoryBufferSize: Memory buffer size default vaule 50GB
         :return: NONE
         """
-
-        chapters = 0
+        chapterCount = 0
         bufferText = ''
         with open(fileName, 'rb') as src:
             while True:
-                tgt = open(fileName + '.%03d' % chapters, 'wb')
+                target = open(fileName + '.%03d' % chapterCount, 'wb')
                 written = 0
                 while written < maximumChaperSize:
                     if len(bufferText) > 0:
-                        tgt.write(bufferText)
-                    tgt.write(src.read(min(memoryBufferSize, maximumChaperSize - written)))
+                        target.write(bufferText)
+                    target.write(src.read(min(memoryBufferSize, maximumChaperSize - written)))
                     written += min(memoryBufferSize, maximumChaperSize - written)
                     bufferText = src.read(1)
                     if len(bufferText) == 0:
                         break
-                tgt.close()
+                target.close()
                 if len(bufferText) == 0:
                     break
-                chapters += 1
+                chapterCount += 1
 
     @staticmethod
-    def textFileSplit(fileName, lineCount = 20, outPutFileName = "output.txt"):
-        splitLen = 20  # 20 lines per file
-        outputBase = 'output'  # output.1.txt, output.2.txt, etc.
-
-        fOpen = open('input.txt', 'r')
+    def textFileSplit(fileName, lineCount = 20, outputFileName = "output.txt"):
+        """
+        INFO: This function will sperate files to line count, this is applicable for text file
+        :param fileName: fileName for which is the source file name
+        :param lineCount: Split for each file default value 20
+        :param outputFileName: Output file names for each one output.1.txt, output.2.txt, etc.
+        :return: NONE
+        """
+        fOpen = open(fileName, 'r')
 
         count = 0
         at = 0
         dest = None
         for line in fOpen:
-            if count % splitLen == 0:
+            if count % lineCount == 0:
                 if dest: dest.close()
-                dest = open(outputBase + str(at) + '.txt', 'w')
+                dest = open(outputFileName + str(at) + '.txt', 'w')
                 at += 1
             dest.write(line)
             count += 1
-        return
 
 
 
