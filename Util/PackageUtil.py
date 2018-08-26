@@ -19,7 +19,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
+
+import re
 import pip
+import sys
+import os
+import subprocess
 
 
 class PackageUtil:
@@ -51,7 +56,72 @@ class PackageUtil:
                 return True
         return False
 
+    @staticmethod
+    def getPythonVersionInfo():
+        """
+        INFO: This function return to exsiting system python info.
+        :return: LIST[STRING]
+        """
+        return sys.version_info
 
+    @staticmethod
+    def checkVersionWithCurrentVersion(version):
+        """
+        INFO: Tnis function will compare current Python version with argument
+        :param version: This parameter will be X.X.X, function will seperate and compare with current OS version
+        :return: BOOLEAN
+        """
+        if version is not "str":
+            raise TypeError("This Argument must be String !!!")
 
+        if re.split("[.]+", version.strip()).__len__() != 3:
+            raise TypeError("This Argument must be seperated with dot !!! : Ex. 3.7.4")
 
+        value = re.split("[.]+", version.strip())
+        return str(value[0]) is PackageUtil.getPythonVersionInfo()[0] \
+               and str(value[1]) is PackageUtil.getPythonVersionInfo()[1] \
+               and str(value[2]) is PackageUtil.getPythonVersionInfo()[2]
 
+    @staticmethod
+    def checkVersionForApplicable(major, minor, micro):
+        """
+        INFO: Tnis function will compare current Python version with arguments(major,minor, micro)
+        :param major: Python major version int value
+        :param minor: Python minor version int value
+        :param micro: Python micro version int value
+        :return: BOOLEAN
+        """
+        return major >= PackageUtil.getPythonVersionInfo()[0] \
+               and minor >= PackageUtil.getPythonVersionInfo()[1] \
+               and micro >= PackageUtil.getPythonVersionInfo()[2]
+
+    @staticmethod
+    def getPlatformInfo():
+        """
+        INFO: This method will return to OS name on current system
+        :return: STRING
+        """
+        platforms = {
+            'linux1': 'Linux',
+            'linux2': 'Linux',
+            'darwin': 'OS X',
+            'win32': 'Windows'
+        }
+        if sys.platform not in platforms:
+            return sys.platform
+        return platforms[sys.platform]
+
+    @staticmethod
+    def isExistCommand(commandName):
+        """
+        INFO: This method will check to command in OS
+        :param commandName: Command name of the operating system
+        :return: BOOLEAN
+        """
+        try:
+            devnull = open(os.devnull)
+            subprocess.Popen([commandName], stdout=devnull, stderr=devnull).communicate()
+        except OSError as e:
+            if e.errno == os.errno.ENOENT:
+                return False
+        return True

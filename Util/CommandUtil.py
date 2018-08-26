@@ -22,9 +22,23 @@ THE SOFTWARE.
 import re
 import os
 import subprocess as osCommand
+from Util.PackageUtil import PackageUtil as packageControl
 
 
 class CommandUtil:
+    """
+    THIS IS NOT DESCRIPTION FOR "CommandUtil.py" CLASS.
+    This part represent to Static Initiliazer Code on Java, it's check to version for the avaiable version.
+    At least current must be 3.6.4+, anything else you should update Python version
+    """
+    ####################################################################################################################
+    if not packageControl.checkVersionForApplicable(3, 6, 4):
+        raise EnvironmentError("At least current must be 3.6.4+, anything else you should update Python version !!!")
+
+    if packageControl.getPlatformInfo() != 'Linux' and packageControl.getPlatformInfo() != 'OS X':
+        raise SystemError("This class only execute Linux or Posix OS platform !!!")
+    ####################################################################################################################
+
     def __init__(self):
         """
         INFO: Default Constructure cannot be Creatable
