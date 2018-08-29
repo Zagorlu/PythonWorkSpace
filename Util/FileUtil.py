@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 """
 Copyright (c) 2018 Taha Emre Demirkol
 
@@ -20,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
 import os
+import zipfile
 from Util.PackageUtil import PackageUtil as packageControl
 
 
@@ -27,7 +30,7 @@ class FileUtil:
     """
     THIS IS NOT DESCRIPTION FOR "CommandUtil.py" CLASS.
     This part represent to Static Initiliazer Code on Java, it's check to version for the avaiable version.
-    At least current must be 3.6.4+, anything else you should update Python version
+    At least current Python version must be 3.6.4+, anything else you should update Python version
     """
     ####################################################################################################################
     if not packageControl.checkVersionForApplicable(3, 6, 4):
@@ -226,6 +229,29 @@ class FileUtil:
                 at += 1
             dest.write(line)
             count += 1
+
+    @staticmethod
+    def zipFiles(zipFileName, fileName, filesPath = os.path.dirname(os.path.realpath(__file__))):
+        """
+        INFO: This function will return to Zipped file name which is the insert to function argument.
+        TRICKS: if fileName will insert to keywork it will zip as file name
+        :param zipFileName: Zipped last file name
+        :param fileName: Source file name
+        :param filesPath: Source file name source path
+        :return: STRING
+        """
+        try:
+            fileName = fileName.strip()
+            ziph = zipfile.ZipFile(zipFileName.strip() + '.zip', 'w', zipfile.ZIP_DEFLATED)
+            for root, dirs, files in os.walk(filesPath):
+                for file in files:
+                    if fileName in file:
+                        ziph.write(os.path.join(file))
+            ziph.close()
+        except Exception as e:
+            raise IOError("File IO process has been occured IOError : " + str(e))
+
+        return filesPath + '/' + fileName
 
 
 

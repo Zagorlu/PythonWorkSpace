@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 """
 Copyright (c) 2018 Taha Emre Demirkol
 
@@ -29,7 +31,7 @@ class CommandUtil:
     """
     THIS IS NOT DESCRIPTION FOR "CommandUtil.py" CLASS.
     This part represent to Static Initiliazer Code on Java, it's check to version for the avaiable version.
-    At least current must be 3.6.4+, anything else you should update Python version
+    At least current Python version must be 3.6.4+, anything else you should update Python version
     """
     ####################################################################################################################
     if not packageControl.checkVersionForApplicable(3, 6, 4):

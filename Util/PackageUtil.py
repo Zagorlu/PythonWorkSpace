@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 """
 Copyright (c) 2018 Taha Emre Demirkol
 
@@ -78,9 +80,9 @@ class PackageUtil:
             raise TypeError("This Argument must be seperated with dot !!! : Ex. 3.7.4")
 
         value = re.split("[.]+", version.strip())
-        return str(value[0]) is PackageUtil.getPythonVersionInfo()[0] \
-               and str(value[1]) is PackageUtil.getPythonVersionInfo()[1] \
-               and str(value[2]) is PackageUtil.getPythonVersionInfo()[2]
+        return int(value[0]) == PackageUtil.getPythonVersionInfo()[0] \
+               and int(value[1]) == PackageUtil.getPythonVersionInfo()[1] \
+               and int(value[2]) == PackageUtil.getPythonVersionInfo()[2]
 
     @staticmethod
     def checkVersionForApplicable(major, minor, micro):
