@@ -28,6 +28,7 @@ import pysftp
 from Util.PackageUtil import PackageUtil as packageControl
 from ftplib import FTP
 
+
 class FtpUtil:
     """
     THIS IS NOT DESCRIPTION FOR "CommandUtil.py" CLASS.
